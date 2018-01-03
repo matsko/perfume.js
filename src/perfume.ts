@@ -3,6 +3,7 @@ declare global {
 }
 
 export default class Perfume {
+  // are all of these public? 
   public firstPaintDuration: number; // public firstPaintDuration: number = 0
   public googleAnalytics: {
     enable: boolean;
@@ -57,6 +58,7 @@ export default class Perfume {
    * @param {string} metricName
    */
   public getMeasurementForGivenName(metricName: string) {
+    // extract this method out.
     return performance.getEntriesByName(metricName)[0];
   }
 
@@ -67,6 +69,7 @@ export default class Perfume {
    * @param {string} metricName
    */
   public getDurationByMetric(metricName: string) {
+    // extract this method out.
     if (this.supportsPerfMark) {
       const entry = this.getMeasurementForGivenName(metricName);
       if (entry && entry.entryType !== "measure") {
@@ -186,6 +189,7 @@ export default class Perfume {
    * @param {boolean} log
    */
   public endPaint(metricName: string, log = false) {
+    // make your own tick() method
     return new Promise((resolve, reject) => {
       setTimeout(() => {
         const duration = this.end(metricName, log);
@@ -199,6 +203,7 @@ export default class Perfume {
    * https://developer.mozilla.org/en-US/docs/Web/API/PerformanceTiming/navigationStart
    */
   public getFirstPaint() {
+    // this method is only used once
     if (performance) {
       const navTiming = performance.timing;
       if (navTiming && navTiming.navigationStart !== 0) {
@@ -215,6 +220,7 @@ export default class Perfume {
    */
   public firstPaint() {
     setTimeout(() => {
+      // why is this set on `this`?
       this.firstPaintDuration = this.getFirstPaint();
       if (this.firstPaintDuration) {
         this.log("firstPaint", this.firstPaintDuration);
@@ -229,6 +235,7 @@ export default class Perfume {
    * @param {number} duration
    */
   public log(metricName: string, duration: number) {
+    // assert these values.
     if (!metricName || !duration) {
       global.console.warn(this.logPrefix, "Please provide a metric name and the duration value");
       return;
