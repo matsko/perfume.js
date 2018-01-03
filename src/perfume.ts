@@ -3,7 +3,7 @@ declare global {
 }
 
 export default class Perfume {
-  public firstPaintDuration: number;
+  public firstPaintDuration: number; // public firstPaintDuration: number = 0
   public googleAnalytics: {
     enable: boolean;
     timingVar: string;
@@ -17,6 +17,7 @@ export default class Perfume {
   private logPrefix: string;
 
   constructor() {
+    // why are these defined here? (look above)
     this.firstPaintDuration = 0;
     this.googleAnalytics = {
       enable: false,
@@ -35,6 +36,9 @@ export default class Perfume {
    * @type {boolean}
    */
   get supportsPerfNow() {
+    // Boolean() doesn't give you anything here (and you're not instantiating it so it might not be what you want)
+    // do: supportsPerfNow(): boolean
+    // return window.performance && window.performance.now ? true : false;
     return Boolean(window.performance && performance.now);
   }
 
@@ -92,6 +96,7 @@ export default class Perfume {
    * - Unlike returns Date.now that is limited to one-millisecond resolution.
    */
   public performanceNow() {
+    // extract this into a service
     if (this.supportsPerfMark) {
       return window.performance.now();
     } else {
@@ -104,6 +109,7 @@ export default class Perfume {
    * @param {string} type
    */
   public mark(metricName: string, type: string) {
+    // use the extracted service
     if (!this.supportsPerfMark) {
       return;
     }
@@ -117,6 +123,7 @@ export default class Perfume {
    * @param {string} endMark
    */
   public measure(metricName: string, startType: string, endType: string) {
+    // same here
     if (!this.supportsPerfMark) {
       return;
     }
@@ -130,6 +137,7 @@ export default class Perfume {
    * @param {string} metricName
    */
   public start(metricName: string) {
+    // not optional
     if (!this.checkMetricName(metricName)) {
       return;
     }
@@ -194,6 +202,7 @@ export default class Perfume {
     if (performance) {
       const navTiming = performance.timing;
       if (navTiming && navTiming.navigationStart !== 0) {
+        // why not performance.now()?
         return Date.now() - navTiming.navigationStart;
       }
     }
